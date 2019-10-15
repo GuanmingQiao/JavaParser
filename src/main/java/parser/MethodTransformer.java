@@ -5,7 +5,7 @@ import com.google.common.collect.Multimap;
 import visitor.JavaParserMethodVisitor;
 
 import java.io.File;
-import com.github.javaparser.ast.type.Type;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -28,14 +28,10 @@ public class MethodTransformer {
         }
     }
 
-    public static void ReportMethodParameterTypes (File file, Map<String, CompilationUnit> currentStates, Multimap<String, List<List<Type>>> parameters) {
+    public static void ReportMethodSignatures(File file, Map<String, CompilationUnit> currentStates, Map<String,  List<String>> parameters) {
         try {
-            ArrayListMultimap<String, List<Type>> parametersByMethod = ArrayListMultimap.create();
             CompilationUnit cu = currentStates.getOrDefault(file.toString(), StaticJavaParser.parse(file));
-            new JavaParserMethodVisitor.ReportMethodParameterTypesVisitor().visit(cu, parametersByMethod);
-            parametersByMethod.keySet().forEach(method -> {
-                parameters.put(file.toString().replaceAll(".java", "") + ":" + method, parametersByMethod.get(method));
-            });
+            new JavaParserMethodVisitor.ReportMethodSignatureVisitor().visit(cu, parameters);
             currentStates.put(file.toString(), cu);
         } catch (Exception e) {
             e.printStackTrace();

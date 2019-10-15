@@ -2,13 +2,10 @@ package driver;
 
 import com.github.javaparser.ParseProblemException;
 import com.github.javaparser.ast.CompilationUnit;
-import com.google.common.collect.ArrayListMultimap;
-import com.google.common.collect.Multimap;
 import config.SourceParserArgConfiguration;
 import parser.MethodTransformer;
 
 import java.io.File;
-import com.github.javaparser.ast.type.Type;
 import java.util.*;
 
 import org.apache.commons.cli.*;
@@ -26,16 +23,15 @@ public class SourceParserDriver {
             outputcodePath = cLine.getOptionValue(SourceParserArgConfiguration.OUTPUT_CODE_PATH_ARG);
         }
 
-
         File sourcecodeDir = new File(sourcecodePath);
         Map<String, CompilationUnit> currentTransformationStates = new HashMap<>();
-        Multimap<String, List<List<Type>>> parameters = ArrayListMultimap.create();
+        Map<String, List<String>> signatures = new HashMap<>();
 
         System.out.println("Transforming All Methods to Static\n");
         new DirExplorer((level, path, file) -> path.endsWith(".java"), (level, path, file) -> {
             try {
                 MethodTransformer.AddStaticMethodModifier(file, currentTransformationStates);
-                MethodTransformer.ReportMethodParameterTypes(file, currentTransformationStates, parameters);
+                MethodTransformer.ReportMethodSignatures(file, currentTransformationStates, signatures);
             } catch (ParseProblemException e) {
                 e.printStackTrace();
                 System.exit(-1);
@@ -46,9 +42,9 @@ public class SourceParserDriver {
 
         System.out.println("Transformation done\n");
         System.out.println("Reporting Method Parameters:");
-        parameters.keySet().forEach(methodPath -> {
+        signatures.keySet().forEach(methodPath -> {
             System.out.print(methodPath + " ");
-            System.out.println(parameters.get(methodPath));
+            System.out.println(signatures.get(methodPath));
         });
     }
 }
