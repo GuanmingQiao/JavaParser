@@ -1,0 +1,18 @@
+<IORecord>
+    <methodKey>some_method</methodKey>
+    <id>20</id>
+    <sortedInputs>
+        <list>
+            <int>10</int>
+            <int>20</int>
+            <int>30</int>
+            <int>40</int>
+            <int>50</int>
+            <int>60</int>
+            <int>70</int>
+            <int>80</int>
+            <int>90</int>
+            <int>100</int>
+        </list>
+    </sortedInputs>
+</IORecord>

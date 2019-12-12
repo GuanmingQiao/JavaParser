@@ -22,6 +22,11 @@
             <artifactId>javaparser-core</artifactId>
             <version>3.14.5</version>
         </dependency>
+        <dependency>
+            <groupId>com.github.javaparser</groupId>
+            <artifactId>javaparser-symbol-solver-core</artifactId>
+            <version>3.14.5</version>
+        </dependency>
         <!-- https://mvnrepository.com/artifact/commons-cli/commons-cli -->
         <dependency>
             <groupId>commons-cli</groupId>
@@ -33,6 +38,18 @@
             <groupId>com.google.guava</groupId>
             <artifactId>guava</artifactId>
             <version>19.0</version>
+        </dependency>
+        <!-- Simple JSON-->
+        <dependency>
+            <groupId>com.googlecode.json-simple</groupId>
+            <artifactId>json-simple</artifactId>
+            <version>1.1.1</version>
+        </dependency>
+        <!-- https://mvnrepository.com/artifact/com.thoughtworks.xstream/xstream -->
+        <dependency>
+            <groupId>com.thoughtworks.xstream</groupId>
+            <artifactId>xstream</artifactId>
+            <version>1.4.11.1</version>
         </dependency>
     </dependencies>
 

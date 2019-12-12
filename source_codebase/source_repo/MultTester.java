@@ -14,7 +14,11 @@ public class MultTester {
         return false;
     }
 
-    public MultTester(int c) {
+    public void setC (int c) {
         this.c = c;
+    }
+
+    public MultTester() {
+
     }
 }

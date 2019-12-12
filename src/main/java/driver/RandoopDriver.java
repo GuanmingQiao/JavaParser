@@ -11,7 +11,7 @@ public class RandoopDriver {
             "--time-limit=10 " +
             "--omitmethods=%s " +
             "--junit-output-dir=%s " +
-            "--generated-limit=100 " +
+            "--generated-limit=10 " +
             "--omitmethods=^(.*getClass.*)$";
     private static Options options = new Options();
     static {
