@@ -148,7 +148,7 @@ public class JavaSymbolSolverDriver {
                 Process deleteProcess = deletePB.start();
                 deleteProcess.waitFor();
 
-                findAndReplace(cuClone, oldInputs, newInputs, testCase.getName());
+                findAndReplace(cuClone, oldInputs, newInputs, testCase.getName(), ioRecordPair.getName());
 
                 // Delete runtime result repo
                 deletePB = new ProcessBuilder(Arrays.asList(String.format("rm -rf %s", RUNTIME_PATH).split(" ")));
@@ -165,7 +165,7 @@ public class JavaSymbolSolverDriver {
         }
     }
 
-    private static void findAndReplace(CompilationUnit cuClone, List<Object> oldInputs, List<Object> newInputs, String testCaseName) throws IOException, ParseException {
+    private static void findAndReplace(CompilationUnit cuClone, List<Object> oldInputs, List<Object> newInputs, String testCaseName, String ioRecordPairName) throws IOException, ParseException {
         JSONParser parser = new JSONParser();
         for (File f : Objects.requireNonNull(new File(RUNTIME_PATH).listFiles())) {
             try {
@@ -208,9 +208,10 @@ public class JavaSymbolSolverDriver {
                 infoMap.put("TARGET_METHOD", TARGET);
                 infoMap.put("REPLACEMENT_MAP", replacementMap);
                 infoMap.put("TEST_CASE", testCaseName);
-                // Add PreMin Monitoring Code
+                // Replace
                 cuClone.getTypes().forEach(classDec -> classDec.getMembers().forEach(method -> method.accept(new JavaParserMethodVisitor.VariableReplacementVisitor(), infoMap)));
-                System.out.println(cuClone.toString());
+                SourceParserFileUtils.write_normal(String.format("source_codebase/replaced_repo/%s.%s/replacement_repo/", testCaseName, ioRecordPairName), "MultTester.java", cuClone.toString());
+                //TODO: move all required xmlParser files into the new repo, so it can compile
             } catch (Exception e) {
                 throw e;
             }
