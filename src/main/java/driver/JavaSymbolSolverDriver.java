@@ -41,13 +41,13 @@ public class JavaSymbolSolverDriver {
 
     private static  final String TARGET_CLASS = "replacement_repo.MultTester";
 
-    private static final String TARGET = "replacement_repo.MultTester.originalMethod(java.util.List<java.lang.Integer>)";
+    private static final String TARGET = "replacement_repo.OriginalClass.originalMethod(java.util.List<java.lang.Integer>)";
 
     private static final String FILE_NAME = "MultTester.java";
 
     public static void main(String[] args) throws Exception {
         TypeSolver typeSolver = new ReflectionTypeSolver();
-        TypeSolver contextTypeSolver = new JavaParserTypeSolver(new File(SOURCE_PATH));
+        TypeSolver contextTypeSolver = new JavaParserTypeSolver(new File(ROOT_PATH));
         typeSolver.setParent(contextTypeSolver);
 
         CombinedTypeSolver combinedSolver = new CombinedTypeSolver();
@@ -95,34 +95,17 @@ public class JavaSymbolSolverDriver {
 
                 SourceParserFileUtils.write_normal(TEMP_PACKAGE_PATH, FILE_NAME, cu.toString());
 
+                String cpCommand = "cp ";
+                for (File name : Objects.requireNonNull(new File(SOURCE_PATH).listFiles())) {
+                    cpCommand = cpCommand + SOURCE_PATH + name.getName() + " ";
+                }
+                cpCommand += "source_codebase/temp_repo/replacement_repo/";
+
+
                 // Move Reporter to Temporary Repo
-                ProcessBuilder moveFilePB = new ProcessBuilder(Arrays.asList("cp source_codebase/replacement_repo/Reporter.java source_codebase/temp_repo/replacement_repo/".split(" ")));
+                ProcessBuilder moveFilePB = new ProcessBuilder(Arrays.asList(cpCommand.split(" ")));
                 moveFilePB.inheritIO();
                 Process moveFileProcess = moveFilePB.start();
-                moveFileProcess.waitFor();
-
-                // Move XMLParser to Temporary Repo
-                moveFilePB = new ProcessBuilder(Arrays.asList("cp source_codebase/replacement_repo/XMLParser.java source_codebase/temp_repo/replacement_repo/".split(" ")));
-                moveFilePB.inheritIO();
-                moveFileProcess = moveFilePB.start();
-                moveFileProcess.waitFor();
-
-                // Move BConverter to Temporary Repo
-                moveFilePB = new ProcessBuilder(Arrays.asList("cp source_codebase/replacement_repo/BConverter.java source_codebase/temp_repo/replacement_repo/".split(" ")));
-                moveFilePB.inheritIO();
-                moveFileProcess = moveFilePB.start();
-                moveFileProcess.waitFor();
-
-                // Move EMConverter to Temporary Repo
-                moveFilePB = new ProcessBuilder(Arrays.asList("cp source_codebase/replacement_repo/EMConverter.java source_codebase/temp_repo/replacement_repo/".split(" ")));
-                moveFilePB.inheritIO();
-                moveFileProcess = moveFilePB.start();
-                moveFileProcess.waitFor();
-
-                // Move IORecord to Temporary Repo
-                moveFilePB = new ProcessBuilder(Arrays.asList("cp source_codebase/replacement_repo/IORecord.java source_codebase/temp_repo/replacement_repo/".split(" ")));
-                moveFilePB.inheritIO();
-                moveFileProcess = moveFilePB.start();
                 moveFileProcess.waitFor();
 
                 // Compile all files

@@ -1,17 +1,16 @@
 package visitor;
 
 import com.github.javaparser.StaticJavaParser;
+import com.github.javaparser.ast.ImportDeclaration;
 import com.github.javaparser.ast.Modifier;
 import com.github.javaparser.ast.Node;
 import com.github.javaparser.ast.NodeList;
-import com.github.javaparser.ast.body.ClassOrInterfaceDeclaration;
-import com.github.javaparser.ast.body.MethodDeclaration;
-import com.github.javaparser.ast.body.Parameter;
-import com.github.javaparser.ast.body.VariableDeclarator;
+import com.github.javaparser.ast.body.*;
 import com.github.javaparser.ast.expr.*;
 import com.github.javaparser.ast.stmt.BlockStmt;
 import com.github.javaparser.ast.stmt.ExpressionStmt;
 import com.github.javaparser.ast.stmt.Statement;
+import com.github.javaparser.ast.type.ClassOrInterfaceType;
 import com.github.javaparser.ast.visitor.GenericVisitorAdapter;
 import com.github.javaparser.printer.PrettyPrinterConfiguration;
 import com.github.javaparser.resolution.declarations.ResolvedMethodDeclaration;
@@ -26,6 +25,15 @@ public class JavaParserMethodVisitor {
      * Simple visitor implementation for visiting MethodDeclaration nodes.
      */
     protected static final PrettyPrinterConfiguration prettyPrinterNoCommentsConfiguration = new PrettyPrinterConfiguration().setPrintComments(false);
+
+    public static class ClassDeclarationVisitor extends GenericVisitorAdapter<Node, Void> {
+        @Override
+        public  Node visit (ClassOrInterfaceDeclaration n, Void arg) {
+            NodeList<ClassOrInterfaceType> implemented = n.getImplementedTypes();
+            implemented.add(StaticJavaParser.parseClassOrInterfaceType("Serializable"));
+            return n;
+        }
+    }
 
     public static class AddStaticMethodModifierVisitor extends GenericVisitorAdapter<Node, Void> {
         @Override
@@ -238,4 +246,6 @@ public class JavaParserMethodVisitor {
         }
         return false;
     }
+
+
 }
