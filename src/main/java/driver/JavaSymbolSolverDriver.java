@@ -194,7 +194,8 @@ public class JavaSymbolSolverDriver {
                 // Replace
                 cuClone.getTypes().forEach(classDec -> classDec.getMembers().forEach(method -> method.accept(new JavaParserMethodVisitor.VariableReplacementVisitor(), infoMap)));
                 SourceParserFileUtils.write_normal(String.format("source_codebase/replaced_repo/%s.%s/replacement_repo/", testCaseName, ioRecordPairName), "MultTester.java", cuClone.toString());
-                //TODO: move all required xmlParser files into the new repo, so it can compile
+                // TODO: instead of writing to a new repo, append to contents of TestOriginalClass.java, and finally write the whole test file to ExtendedTestOriginalClass.java
+                // TODO: add main method that calls all of the tests
             } catch (Exception e) {
                 throw e;
             }

@@ -85,7 +85,7 @@ public class RandoopDriver {
             Process testFileCleanerProcess = testFilCleaner.start();
             testFileCleanerProcess.waitFor();
 
-            String testFileName = escapeString("test_" + fileName.replace(".java", "")) + ".java";
+            String testFileName = escapeString("Test" + fileName.replace(".java", "")) + ".java";
 
             ProcessBuilder renameFileCleaner = new ProcessBuilder("/bin/sh", "-c", "mv " + outputDir + "/RegressionTest0.java " + outputDir + "/" + testFileName);
             renameFileCleaner.inheritIO();
@@ -99,6 +99,8 @@ public class RandoopDriver {
             testCu.addImport(packageName + ".IORecord");
             testCu.addImport(packageName + ".Reporter");
             testCu.addImport(packageName +".XMLParser");
+            testCu.setPackageDeclaration(StaticJavaParser.parsePackageDeclaration("package " + packageName + ";"));
+            testCu.getTypes().forEach(classDec -> classDec.setName(StaticJavaParser.parseSimpleName(testFileName.replace(".java", ""))));
             SourceParserFileUtils.write_normal(outputDir, testFileName, testCu.toString());
 
             if (!packageName.isEmpty()) {
